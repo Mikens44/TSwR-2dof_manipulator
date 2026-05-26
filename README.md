@@ -9,4 +9,5 @@ Implementation of several control methods for a 2DOF planar manipulator:
 - ADRC with adaptive b_hat
 - ADRC + FLC
 
-Simulation is performed using PyBullet.
+Simulation is performed using PyBullet. 
+The programs are based on templates provided by dr Piotr Kicki of the Poznan University of Technology.
