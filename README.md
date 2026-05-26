@@ -3,6 +3,7 @@
 Implementation of several control methods for a 2DOF planar manipulator:
 
 - Feedback Linearization Control
+- MMAC
 - Decentralized PD
 - ADRC
 - ADRC with adaptive b_hat
