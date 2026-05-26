@@ -18,6 +18,18 @@ class ESO:
     def update(self, q, u):
         self.states.append(copy(self.state))
         ### TODO implement ESO update
+        z1_pred = self.state[0]
+
+        u_col = np.array([[u]]) if np.isscalar(u) else np.array(u)[:, np.newaxis]
+        z_col = self.state[:, np.newaxis] if len(self.state.shape) == 1 else self.state
+
+        dot_f = np.array([[0.0]])
+
+        dot_z = self.A @ z_col + self.B @ u_col + self.W @ dot_f + self.L * (q - z1_pred)
+
+        z_new = z_col + self.Tp * dot_z
+
+        self.state = z_new.flatten()
 
     def get_state(self):
         return self.state

@@ -9,16 +9,58 @@ class ADRCJointController(Controller):
         self.kp = kp
         self.kd = kd
 
-        A = None
-        B = None
-        L = None
-        W = None
+        A = np.array([
+            [0.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0],
+            [0.0, 0.0, 0.0]
+        ])
+        B = np.array([
+            [0.0],
+            [b],
+            [0.0]
+        ])
+        L = np.array([
+            [3.0 * p],
+            [3.0 * (p**2)],
+            [p**3]
+        ])
+        W = np.array([
+            [0.0],
+            [0.0],
+            [1.0]
+        ])
         self.eso = ESO(A, B, W, L, q0, Tp)
 
     def set_b(self, b):
         ### TODO update self.b and B in ESO
-        return NotImplementedError
+        self.b = b
+        new_B = np.array([
+            [0.0],
+            [b],
+            [0.0]
+        ])
+        self.eso.set_B(new_B)
 
     def calculate_control(self, x, q_d, q_d_dot, q_d_ddot):
         ### TODO implement ADRC
-        return NotImplementedError
+        q_real = x[0]
+
+        z = self.eso.get_state()
+        q_est = z[0]
+        q_dot_est = z[1]
+        f_est = z[2]
+
+        e = q_d - q_est
+        e_dot = q_d_dot - q_dot_est
+
+        v = q_d_ddot + self.kd * e_dot + self.kp * e
+
+        disturbance_rejection = True
+        if disturbance_rejection:
+            u = (v - f_est) / self.b
+        else:
+            u = v /self.b
+
+        self.eso.update(q_real, u)
+
+        return u
