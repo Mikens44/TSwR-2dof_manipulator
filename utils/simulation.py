@@ -19,10 +19,16 @@ def simulate_pybullet(trajectory_generator, controller, timesteps, multimodel):
     ctrl = []
     Q = []
     Q_d = []
+    obj_hist = []
     q0, qdot0, _ = trajectory_generator.generate(0.)
     manipulator = PlanarManipulator2DOFPyBullet(timesteps[1], q0, qdot0, multimodel)
     for t in timesteps:
         x = np.array(manipulator.get_state())
+        if multimodel:
+            # print("\n====================")
+            # print(f"ITERATION t = {t:.3f}")
+            # print("====================")
+            obj_hist.append(manipulator.i)
         Q.append(copy(x))
 
         q_d, q_d_dot, q_d_ddot = trajectory_generator.generate(t)
@@ -33,7 +39,17 @@ def simulate_pybullet(trajectory_generator, controller, timesteps, multimodel):
         manipulator.set_control(control)
         manipulator.simulation_step()
         sleep(timesteps[1] / 2)
-    return np.array(Q), np.array(Q_d), np.array(ctrl), timesteps
+
+    if multimodel:
+        return (
+            np.array(Q),
+            np.array(Q_d),
+            np.array(ctrl),
+            timesteps,
+            np.array(obj_hist)
+        )
+
+    return np.array(Q), np.array(Q_d), np.array(ctrl), timesteps, _
 
 
 def simulate_scipy(trajectory_generator, controller, timesteps):

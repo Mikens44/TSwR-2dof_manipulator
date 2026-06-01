@@ -10,7 +10,7 @@ class ADRController(Controller):
         for param in params:
             self.joint_controllers.append(ADRCJointController(*param, Tp))
         self.adaptive_b = adaptive_b
-        self.model = ManiuplatorModel(Tp)
+        self.model = ManiuplatorModel(Tp, m3=0.1, r3=0.05)
 
     def update_b(self, x):
         M = self.model.M(x)
@@ -20,8 +20,6 @@ class ADRController(Controller):
         self.joint_controllers[1].set_b(M_inv[1, 1])
 
     def calculate_control(self, x, q_d, q_d_dot, q_d_ddot):
-        if self.adaptive_b:
-            self.update_b(x)
 
         u = []
 
@@ -34,6 +32,9 @@ class ADRController(Controller):
                     q_d_ddot[i]
                 )
             )
+
+        if self.adaptive_b:
+            self.update_b(x) 
 
         return np.array(u)
 

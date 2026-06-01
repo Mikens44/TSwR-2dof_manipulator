@@ -2,7 +2,7 @@ import numpy as np
 
 
 class ManiuplatorModel:
-    def __init__(self, Tp, m3=3.0, r3=0.05, add_uncertainty=False):
+    def __init__(self, Tp, m3=0.1, r3=0.05, add_uncertainty=False):
         self.Tp = Tp
         self.l1 = 0.5
         self.r1 = 0.04

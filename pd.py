@@ -11,12 +11,12 @@ end = 5
 
 traj_gen = Sinusoidal(np.array([0., 1.]), np.array([2., 2.]), np.array([0., 0.]))
 
-kp_real = np.array([500.0, 325.0])
-kd_real = np.array([150.0, 100.0])
+kp_real = np.array([80.0, 80.0])
+kd_real = np.array([20.0, 20.0])
 
 controller = PDDecentralizedController(kp_real, kd_real)
 
-Q, Q_d, u, T = simulate("PYBULLET", traj_gen, controller, Tp, end, multimodel=True)
+Q, Q_d, u, T, _ = simulate("PYBULLET", traj_gen, controller, Tp, end, multimodel=True)
 
 plt.figure("Klasyczny regulator PD - Zadanie 5 i 6")
 

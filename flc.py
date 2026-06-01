@@ -27,7 +27,7 @@ At the end implement Point2point trajectory generator to move your manipulator t
 traj_gen = Poly3(np.array([0., 0.]), np.array([np.pi/4, np.pi/6]), end)
 
 
-Q, Q_d, u, T = simulate("PYBULLET", traj_gen, controller, Tp, end)
+Q, Q_d, u, T, _ = simulate("PYBULLET", traj_gen, controller, Tp, end)
 
 
 """

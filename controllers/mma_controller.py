@@ -21,10 +21,17 @@ class MMAController(Controller):
         self.K_d = 30.0
 
         self.last_u = np.zeros(2)
+        self.last_x = None
+
+        self.model_history = []
+        self.error_history = []
+        self.object_history = []
 
     def choose_model(self, x):
-        if np.all(self.last_u == 0) or self.last_x is None:
+        if self.last_x is None:
             self.last_x = x.copy()
+            self.model_history.append(self.i)
+            self.error_history.append([0.0, 0.0, 0.0])
             return
         
         q_prev = self.last_x[:2]
@@ -52,6 +59,8 @@ class MMAController(Controller):
         
         self.i = np.argmin(errors)
         print(f"--> WYBRANO MODEL: {self.i}")
+        self.model_history.append(self.i)
+        self.error_history.append(errors.copy())
         
         self.last_x = x.copy()
 
